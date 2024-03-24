@@ -6,7 +6,6 @@ This repository contains code for managing user authentication and authorization
 
 ```
 .
-├── gradle
 ├── src
 │   ├── main
 │   │   ├── java
@@ -15,37 +14,37 @@ This repository contains code for managing user authentication and authorization
 │   │   │           └── authcenterback
 │   │   │               ├── controllers
 │   │   │               │   ├── AuthController.java
-│   │   │               │   └── ExampleController.java
+│   │   │               │   └── AuthorityController.java
 │   │   │               ├── dto
 │   │   │               │   ├── request
+│   │   │               │   │   ├── AuthorityRequestDTO.java
 │   │   │               │   │   ├── LoginRequestDTO.java
 │   │   │               │   │   ├── RefreshRequestDTO.java
 │   │   │               │   │   └── RegisterRequestDTO.java
 │   │   │               │   └── response
 │   │   │               │       ├── api
 │   │   │               │       │   ├── impl
-│   │   │               │       │   │   ├── ApiErrorResponse.java
-│   │   │               │       │   │   └── ApiSuccessResponse.java
-│   │   │               │       │   └── ApiResponse.java
-│   │   │               │       ├── data
-│   │   │               │       │   ├── impl
-│   │   │               │       │   │   ├── JwtAuthenticationResponse.java
-│   │   │               │       │   │   ├── RefreshTokenResponse.java
-│   │   │               │       │   │   └── UserDataResponse.java
-│   │   │               │       │   ├── DataResponse.java
-│   │   │               │       │   └── TokenResponse.java
-│   │   │               │       ├── BaseResponse.java
-│   │   │               │       └── ResponseDTO.java
+│   │   │               │       │   │   ├── ApiErrorResponseImpl.java
+│   │   │               │       │   │   └── ApiSuccessResponseImpl.java
+│   │   │               │       │   ├── ApiResponse.java
+│   │   │               │       │   ├── ErrorResponse.java
+│   │   │               │       │   └── SuccessResponse.java
+│   │   │               │       └── data
+│   │   │               │           ├── TokenResponse.java
+│   │   │               │           └── UserDataResponse.java
 │   │   │               ├── exception
-│   │   │               │   ├── ConstraintsViolationError.java
-│   │   │               │   ├── CustomRestExceptionHandler.java
-│   │   │               │   └── ErrorMessage.java
+│   │   │               │   └── UserAlreadyExistsException.java
+│   │   │               ├── interceptors
+│   │   │               │   └── AuthEntryPointInterceptor.java
 │   │   │               ├── models
-│   │   │               │   ├── EService.java
-│   │   │               │   ├── Service.java
+│   │   │               │   ├── enums
+│   │   │               │   │   ├── ERole.java
+│   │   │               │   │   └── ErrorsConstants.java
+│   │   │               │   ├── ErrorObject.java
+│   │   │               │   ├── Role.java
 │   │   │               │   └── User.java
 │   │   │               ├── repositories
-│   │   │               │   ├── ServiceRepository.java
+│   │   │               │   ├── RoleRepository.java
 │   │   │               │   └── UserRepository.java
 │   │   │               ├── security
 │   │   │               │   └── SecurityConfiguration.java
@@ -58,9 +57,9 @@ This repository contains code for managing user authentication and authorization
 │   │   │               │   ├── ModulesService.java
 │   │   │               │   └── MyUserDetailsService.java
 │   │   │               ├── utils
-│   │   │               │   ├── AuthEntryPointJwt.java
 │   │   │               │   ├── AuthTokenFilter.java
-│   │   │               │   └── LoggingFilterBean.java
+│   │   │               │   ├── GlobalRestExceptionHandler.java
+│   │   │               │   └── LoggingFilter.java
 │   │   │               └── AuthCenterBackApplication.java
 │   │   └── resources
 │   │       ├── static
@@ -72,10 +71,13 @@ This repository contains code for managing user authentication and authorization
 │               └── fqrmix
 │                   └── authcenterback
 │                       └── AuthCenterBackApplicationTests.java
+├── Dockerfile
 ├── README.md
 ├── build.gradle
+├── docker-compose.yml
 ├── gradlew
 ├── gradlew.bat
+├── qodana.yaml
 └── settings.gradle
 ```
 
@@ -113,7 +115,7 @@ The `AuthTokenFilter` class is a filter for processing JWT tokens. It verifies a
 
 ## LoggingFilterBean
 
-`LoggingFilterBean` is responsible for logging HTTP requests and responses. It records information about requests and responses for analysis and debugging.
+`LoggingFilter` is responsible for logging HTTP requests and responses. It records information about requests and responses for analysis and debugging.
 
 ## User
 
