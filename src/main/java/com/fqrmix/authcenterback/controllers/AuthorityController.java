@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,7 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Авторизация")
 @Slf4j
 public class AuthorityController {
-    @PostMapping
+    @PostMapping(
+            consumes = MediaType.ALL_VALUE
+    )
     @Operation(summary = "Доступен только авторизованным пользователям с ролью, указанной  в запросе")
     public ResponseEntity<ApiSuccessResponseImpl<UserDataResponse>> authorize(
             @RequestBody
