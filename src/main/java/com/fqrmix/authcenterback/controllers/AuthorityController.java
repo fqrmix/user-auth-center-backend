@@ -25,9 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class AuthorityController {
     @PostMapping(
-            headers = "Accept=*/*",
-            consumes = MediaType.ALL_VALUE,
-            produces = MediaType.ALL_VALUE
+            consumes = { MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE },
+            produces = { MediaType.TEXT_EVENT_STREAM_VALUE, MediaType.APPLICATION_JSON_VALUE }
     )
     @Operation(summary = "Доступен только авторизованным пользователям с ролью, указанной  в запросе")
     public ResponseEntity<ApiSuccessResponseImpl<UserDataResponse>> authorize(
