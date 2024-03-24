@@ -15,6 +15,7 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 import javax.crypto.SecretKey;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import static io.jsonwebtoken.Jwts.parser;
@@ -50,11 +51,22 @@ public class JWTService {
 
     /**
      * Retrieves the signing key used for JWT token generation and validation.
+     * <p>
+     * How to generate keys:
+     * <p>
+     ** ssh-keygen -t rsa -b 4096 -m PEM -f jwtRS256.key && \
+     ** openssl rsa -in jwtRS256.key -pubout -outform PEM -out jwtRS256.key.pub && \
+     ** cat jwtRS256.key | base64
      *
      * @return The signing key.
      */
     private SecretKey getSigningKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(jwtSecret);
+
+        byte[] keyBytes = Decoders.BASE64.decode(
+                jwtSecret
+                        .replace("-----BEGIN RSA PRIVATE KEY-----", "")
+                        .replace("-----END RSA PRIVATE KEY-----", "")
+        );
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -97,5 +109,20 @@ public class JWTService {
                 .parseSignedClaims(authToken)
                 .getPayload()
                 .getSubject();
+    }
+
+    /**
+     * Extracts the expiration date from the provided JWT token.
+     *
+     * @param authToken The JWT token from which to extract the username.
+     * @return The expiration date extracted from the JWT token.
+     */
+    public Date getExpirationDateFromJwtToken(String authToken) {
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
+                .build()
+                .parseSignedClaims(authToken)
+                .getPayload()
+                .getExpiration();
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.fqrmix.authcenterback.exception.UserAlreadyExistsException;
 
 /**
  * Implementation of MyUserDetailsService interface providing user-related services.
@@ -42,7 +43,7 @@ public class UserDetailsServiceImpl implements MyUserDetailsService {
     public User create(User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
             log.warn("Creation failed. User with username { {} } already exists", user.getUsername());
-            throw new RuntimeException("User with this username already exists");
+            throw new UserAlreadyExistsException("User with this username already exists");
         }
 
         return save(user);

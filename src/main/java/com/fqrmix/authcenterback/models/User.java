@@ -11,6 +11,7 @@ import java.util.Set;
 /**
  * Entity class representing a user.
  */
+
 @Entity
 @Builder(setterPrefix = "with")
 @Getter

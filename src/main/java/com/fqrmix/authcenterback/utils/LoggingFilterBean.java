@@ -3,6 +3,7 @@ package com.fqrmix.authcenterback.utils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.util.ContentCachingRequestWrapper;
@@ -11,6 +12,7 @@ import jakarta.servlet.*;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.function.Function;
 
 import static java.util.Collections.list;
@@ -23,14 +25,23 @@ import static java.util.Collections.list;
 public class LoggingFilterBean extends GenericFilterBean {
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
+    public void doFilter(
+            ServletRequest request,
+            ServletResponse response,
+            FilterChain chain
+    ) throws ServletException, IOException {
+
         ContentCachingRequestWrapper requestWrapper = requestWrapper(request);
         ContentCachingResponseWrapper responseWrapper = responseWrapper(response);
 
         chain.doFilter(requestWrapper, responseWrapper);
 
-        logRequest(requestWrapper);
-        logResponse(responseWrapper);
+        if (Objects.equals(requestWrapper.getMethod(), HttpMethod.POST.name())) {
+            logRequest(requestWrapper);
+            logResponse(responseWrapper);
+        }
+
+        responseWrapper.copyBodyToResponse();
     }
 
     private void logRequest(ContentCachingRequestWrapper request) {
@@ -40,15 +51,17 @@ public class LoggingFilterBean extends GenericFilterBean {
         log.info("request: {}", builder);
     }
 
-    private void logResponse(ContentCachingResponseWrapper response) throws IOException {
+    private void logResponse(ContentCachingResponseWrapper response) {
         StringBuilder builder = new StringBuilder();
         builder.append(headersToString(response.getHeaderNames(), response::getHeader));
         builder.append(new String(response.getContentAsByteArray()));
         log.info("response: {}", builder);
-        response.copyBodyToResponse();
     }
 
-    private String headersToString(Collection<String> headerNames, Function<String, String> headerValueResolver) {
+    private String headersToString(
+            Collection<String> headerNames,
+            Function<String, String> headerValueResolver
+    ) {
         StringBuilder builder = new StringBuilder();
         for (String headerName : headerNames) {
             String header = headerValueResolver.apply(headerName);
