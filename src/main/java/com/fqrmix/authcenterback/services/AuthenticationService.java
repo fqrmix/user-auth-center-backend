@@ -2,12 +2,12 @@ package com.fqrmix.authcenterback.services;
 
 import com.fqrmix.authcenterback.dto.request.LoginRequestDTO;
 import com.fqrmix.authcenterback.dto.request.RegisterRequestDTO;
-import com.fqrmix.authcenterback.dto.response.api.ApiResponse;
-import com.fqrmix.authcenterback.dto.response.api.impl.ApiSuccessResponse;
-import com.fqrmix.authcenterback.dto.response.data.impl.TokenResponse;
-import com.fqrmix.authcenterback.dto.response.data.impl.UserDataResponse;
+import com.fqrmix.authcenterback.dto.response.data.TokenResponse;
+import com.fqrmix.authcenterback.dto.response.data.UserDataResponse;
+import com.fqrmix.authcenterback.models.enums.ERole;
 import com.fqrmix.authcenterback.models.User;
-import com.fqrmix.authcenterback.models.Service;
+import com.fqrmix.authcenterback.models.Role;
+import com.fqrmix.authcenterback.repositories.RoleRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +35,9 @@ public class AuthenticationService {
 
     @Autowired
     private final JWTService jwtService;
+
+    @Autowired
+    private final RoleRepository roleRepository;
 
     @Autowired
     private final PasswordEncoder passwordEncoder;
@@ -91,35 +94,36 @@ public class AuthenticationService {
                 .withPassword(passwordEncoder.encode(requestDTO.getPassword()))
                 .build();
 
-        Set<String> strRoles = requestDTO.getServices();
-        Set<Service> roles = new HashSet<>();
+        Set<String> strRoles = requestDTO.getRoles();
+        Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {
-//            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-//                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//            roles.add(EService.BASE);
+            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
                 switch (role) {
-                    case "acc_admin":
-//                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-//                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//                        roles.add(EService.ACCOUNTING_BOT_ADMIN_PANEL);
+                    case "ROLE_ADMIN":
+                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(adminRole);
                         break;
-                    case "smbot_admin":
-//                        Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
-//                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//                        roles.add(EService.SHOPMASTER_BOT_ADMIN_PANEL);
 
-                        break;
-                    default:
-//                        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+//                    case "MODERATOR":
+//                        Role modRole = roleRepository.findByName(ERole.MODERATOR)
 //                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//                        roles.add(EService.BASE);
+//                        roles.add(ERole.MODERATOR);
+//                        break;
+
+                    default:
+                        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                        roles.add(userRole);
                 }
             });
         }
-        user.setServices(roles);
+        user.setRoles(roles);
         userDetailsService.create(user);
 
         log.info("User was successfully registered with following data: {}", user.toUserDataResponse());

@@ -1,6 +1,6 @@
 package com.fqrmix.authcenterback.models;
 
-import com.fqrmix.authcenterback.dto.response.data.impl.UserDataResponse;
+import com.fqrmix.authcenterback.dto.response.data.UserDataResponse;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -42,11 +42,11 @@ public class User {
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "user_services",
+            name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "service_id")
+            inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-    private Set<Service> services;
+    private Set<Role> roles;
 
     /**
      * Converts the user entity to UserDataResponse DTO.
@@ -56,7 +56,7 @@ public class User {
     public UserDataResponse toUserDataResponse() {
         return UserDataResponse.builder()
                 .withUsername(this.getUsername())
-                .withServices(this.getServices())
+                .withRoles(this.getRoles())
                 .build();
     }
 }

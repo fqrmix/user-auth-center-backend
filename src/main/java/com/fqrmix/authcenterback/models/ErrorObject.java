@@ -1,4 +1,4 @@
-package com.fqrmix.authcenterback.dto.response.api;
+package com.fqrmix.authcenterback.models;
 
 import lombok.Builder;
 import lombok.Data;

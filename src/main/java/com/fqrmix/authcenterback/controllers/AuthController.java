@@ -2,11 +2,9 @@ package com.fqrmix.authcenterback.controllers;
 
 import com.fqrmix.authcenterback.dto.request.LoginRequestDTO;
 import com.fqrmix.authcenterback.dto.request.RegisterRequestDTO;
-import com.fqrmix.authcenterback.dto.response.api.ApiResponse;
-import com.fqrmix.authcenterback.dto.response.api.impl.ApiSuccessResponse;
-import com.fqrmix.authcenterback.dto.response.data.DataResponse;
-import com.fqrmix.authcenterback.dto.response.data.impl.TokenResponse;
-import com.fqrmix.authcenterback.dto.response.data.impl.UserDataResponse;
+import com.fqrmix.authcenterback.dto.response.api.impl.ApiSuccessResponseImpl;
+import com.fqrmix.authcenterback.dto.response.data.TokenResponse;
+import com.fqrmix.authcenterback.dto.response.data.UserDataResponse;
 import com.fqrmix.authcenterback.exception.UserAlreadyExistsException;
 import com.fqrmix.authcenterback.services.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -17,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,14 +37,15 @@ public class AuthController {
 
     @Operation(summary = "Регистрация пользователя")
     @PostMapping("/register")
-    public ResponseEntity<ApiSuccessResponse<UserDataResponse>> register(
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ApiSuccessResponseImpl<UserDataResponse>> register(
             @RequestBody
             @Valid
             RegisterRequestDTO request
     ) throws UserAlreadyExistsException {
         try {
             return ResponseEntity.ok()
-                    .body(ApiSuccessResponse.<UserDataResponse>builder()
+                    .body(ApiSuccessResponseImpl.<UserDataResponse>builder()
                             .withType("success")
                             .withData(authenticationService.register(request))
                             .build());
@@ -60,7 +60,7 @@ public class AuthController {
 
     @Operation(summary = "Авторизация пользователя")
     @PostMapping("/login")
-    public ResponseEntity<ApiSuccessResponse<TokenResponse>> login(
+    public ResponseEntity<ApiSuccessResponseImpl<TokenResponse>> login(
             @RequestBody
             @Valid
             LoginRequestDTO request
@@ -80,7 +80,7 @@ public class AuthController {
             return ResponseEntity.ok()
                     .header(HttpHeaders.SET_COOKIE, accessTokenCookie.toString())
                     .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.SET_COOKIE)
-                    .body(ApiSuccessResponse.<TokenResponse>builder()
+                    .body(ApiSuccessResponseImpl.<TokenResponse>builder()
                                 .withType("success")
                                 .withData(response)
                                 .build());

@@ -19,7 +19,7 @@ public class RegisterRequestDTO {
     @NotBlank(message = "Имя пользователя не может быть пустым")
     private String username;
 
-    private Set<String> services;
+    private Set<String> roles;
 
     @Schema(description = "Пароль пользователя", example = "myPasswordQWERTY123")
     @Size(min = 6, max = 120, message = "Длина пароля должна быть от 6 до 120 символов")

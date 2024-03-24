@@ -1,11 +1,14 @@
-package com.fqrmix.authcenterback.exception;
+package com.fqrmix.authcenterback.utils;
 
-import com.fqrmix.authcenterback.dto.response.api.ErrorObject;
-import com.fqrmix.authcenterback.dto.response.api.IErrorResponse;
-import com.fqrmix.authcenterback.dto.response.api.impl.ApiErrorResponse;
+import com.fqrmix.authcenterback.exception.UserAlreadyExistsException;
+import com.fqrmix.authcenterback.models.ErrorObject;
+import com.fqrmix.authcenterback.dto.response.api.ErrorResponse;
+import com.fqrmix.authcenterback.dto.response.api.impl.ApiErrorResponseImpl;
+import com.fqrmix.authcenterback.models.enums.ErrorsConstants;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,7 +21,7 @@ import java.util.List;
  * Global exception handler for REST controllers.
  */
 @RestControllerAdvice
-public class CustomRestExceptionHandler {
+public class GlobalRestExceptionHandler {
 
     /**
      * Handles bad credentials errors for method arguments.
@@ -28,23 +31,51 @@ public class CustomRestExceptionHandler {
      * @return ResponseEntity containing the error response.
      */
     @ExceptionHandler({ BadCredentialsException.class })
-    public ResponseEntity<ApiErrorResponse> handleAuthenticationException(
+    public ResponseEntity<ApiErrorResponseImpl> handleAuthenticationException(
             BadCredentialsException ex,
             WebRequest request
     ) {
 
         return new ResponseEntity<>(
-                ApiErrorResponse.builder()
+                ApiErrorResponseImpl.builder()
                         .withType("error")
                         .withCode(ex.getClass().getSimpleName())
                         .withMessage(ex.getLocalizedMessage())
                         .withErrors(List.of(ErrorObject.builder()
-                                                .withError(Errors.BAD_CREDENTIALS.getError())
-                                                .withDescription(Errors.BAD_CREDENTIALS.getDescription())
+                                                .withError(ErrorsConstants.BAD_CREDENTIALS.getError())
+                                                .withDescription(ErrorsConstants.BAD_CREDENTIALS.getDescription())
                                                 .build()))
                         .build(),
                 new HttpHeaders(),
                 HttpStatus.UNAUTHORIZED
+        );
+    }
+
+    /**
+     * Handles access denied errors for method arguments.
+     *
+     * @param ex      The AccessDeniedException that occurred.
+     * @param request The web request.
+     * @return ResponseEntity containing the error response.
+     */
+    @ExceptionHandler({ AccessDeniedException.class })
+    public ResponseEntity<ApiErrorResponseImpl> handleAuthenticationException(
+            AccessDeniedException ex,
+            WebRequest request
+    ) {
+
+        return new ResponseEntity<>(
+                ApiErrorResponseImpl.builder()
+                        .withType("error")
+                        .withCode(ex.getClass().getSimpleName())
+                        .withMessage(ex.getLocalizedMessage())
+                        .withErrors(List.of(ErrorObject.builder()
+                                .withError(ErrorsConstants.ACCESS_DENIED.getError())
+                                .withDescription(ErrorsConstants.ACCESS_DENIED.getDescription())
+                                .build()))
+                        .build(),
+                new HttpHeaders(),
+                HttpStatus.FORBIDDEN
         );
     }
 
@@ -56,22 +87,20 @@ public class CustomRestExceptionHandler {
      * @return ResponseEntity containing the error response.
      */
     @ExceptionHandler({ UserAlreadyExistsException.class })
-    public ResponseEntity<IErrorResponse> handleUserAlreadyExistsException(
+    public ResponseEntity<ErrorResponse> handleUserAlreadyExistsException(
             UserAlreadyExistsException ex,
             WebRequest request
     ) {
 
-        return new ResponseEntity<IErrorResponse>(
-                ApiErrorResponse.builder()
+        return new ResponseEntity<ErrorResponse>(
+                ApiErrorResponseImpl.builder()
                         .withType("error")
                         .withCode(ex.getClass().getSimpleName())
                         .withMessage(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                        .withErrors(List.of(
-                                ErrorObject.builder()
-                                        .withError(Errors.USER_ALREADY_EXISTS.getError())
-                                        .withDescription(Errors.USER_ALREADY_EXISTS.getDescription())
-                                        .build()
-                        ))
+                        .withErrors(List.of(ErrorObject.builder()
+                                .withError(ErrorsConstants.USER_ALREADY_EXISTS.getError())
+                                .withDescription(ErrorsConstants.USER_ALREADY_EXISTS.getDescription())
+                                .build()))
                         .build(),
                 new HttpHeaders(),
                 HttpStatus.BAD_REQUEST
@@ -86,7 +115,7 @@ public class CustomRestExceptionHandler {
      * @return ResponseEntity containing the error response.
      */
     @ExceptionHandler({ MethodArgumentNotValidException.class })
-    public ResponseEntity<IErrorResponse> handleValidationError(
+    public ResponseEntity<ErrorResponse> handleValidationError(
             MethodArgumentNotValidException ex,
             WebRequest request
     ) {
@@ -100,8 +129,8 @@ public class CustomRestExceptionHandler {
                                 .build()
                 ).toList();
 
-        return new ResponseEntity<IErrorResponse>(
-                ApiErrorResponse.builder()
+        return new ResponseEntity<ErrorResponse>(
+                ApiErrorResponseImpl.builder()
                         .withType("error")
                         .withCode(ex.getClass().getSimpleName())
                         .withMessage(HttpStatus.BAD_REQUEST.getReasonPhrase())
@@ -120,17 +149,16 @@ public class CustomRestExceptionHandler {
      * @return ResponseEntity containing the error response.
      */
     @ExceptionHandler({ Exception.class })
-    public ResponseEntity<IErrorResponse> handleAll(Exception ex, WebRequest request) {
+    public ResponseEntity<ErrorResponse> handleAll(Exception ex, WebRequest request) {
 
-        return new ResponseEntity<IErrorResponse>(
-                ApiErrorResponse.builder()
+        return new ResponseEntity<ErrorResponse>(
+                ApiErrorResponseImpl.builder()
                         .withType("error")
-                        .withErrors(List.of())
-                        .withMessage(ex.getClass().getSimpleName())
+                        .withMessage(ex.getLocalizedMessage())
                         .withCode(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
                         .withErrors(List.of(ErrorObject.builder()
-                                .withError(Errors.INTERNAL_SERVER_ERROR.getError())
-                                .withDescription(Errors.INTERNAL_SERVER_ERROR.getDescription())
+                                .withError(ErrorsConstants.INTERNAL_SERVER_ERROR.getError())
+                                .withDescription(ErrorsConstants.INTERNAL_SERVER_ERROR.getDescription())
                                 .build()))
                         .build(),
                 new HttpHeaders(),

@@ -1,5 +1,5 @@
 package com.fqrmix.authcenterback.dto.response.api;
 
-public interface ISuccessResponse<T> extends ApiResponse {
+public interface SuccessResponse<T> extends ApiResponse {
     T getData();
 }

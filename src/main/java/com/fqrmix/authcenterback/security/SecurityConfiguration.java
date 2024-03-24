@@ -1,7 +1,7 @@
 package com.fqrmix.authcenterback.security;
 
 import com.fqrmix.authcenterback.services.MyUserDetailsService;
-import com.fqrmix.authcenterback.utils.AuthEntryPointJwt;
+import com.fqrmix.authcenterback.interceptors.AuthEntryPointInterceptor;
 import com.fqrmix.authcenterback.utils.AuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,7 +30,7 @@ public class SecurityConfiguration {
     private MyUserDetailsService userDetailsService;
 
     @Autowired
-    private AuthEntryPointJwt unauthorizedHandler;
+    private AuthEntryPointInterceptor unauthorizedHandler;
 
     /**
      * Defines the authentication JWT token filter bean.
@@ -90,7 +90,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/login").permitAll()
                         .requestMatchers("/test/**").permitAll()
                         .requestMatchers("/swagger-ui/**", "/swagger-resources/*", "/v3/api-docs/**").permitAll()
                         .anyRequest().authenticated()

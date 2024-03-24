@@ -1,8 +1,8 @@
-package com.fqrmix.authcenterback.utils;
+package com.fqrmix.authcenterback.interceptors;
 
 import java.io.IOException;
 
-import com.fqrmix.authcenterback.dto.response.api.impl.ApiErrorResponse;
+import com.fqrmix.authcenterback.dto.response.api.impl.ApiErrorResponseImpl;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 @Component
 @Slf4j
-public class AuthEntryPointJwt implements AuthenticationEntryPoint {
+public class AuthEntryPointInterceptor implements AuthenticationEntryPoint {
 
     /**
      * Handles unauthorized access errors by returning an appropriate response.
@@ -43,7 +43,7 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        ApiErrorResponse apiResponse = ApiErrorResponse.builder()
+        ApiErrorResponseImpl apiResponse = ApiErrorResponseImpl.builder()
                 .withType("error")
                 .withCode(HttpStatus.UNAUTHORIZED.getReasonPhrase())
                 .withMessage(authException.getMessage())

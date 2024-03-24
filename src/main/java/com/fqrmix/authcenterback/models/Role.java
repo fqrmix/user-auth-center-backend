@@ -1,5 +1,6 @@
 package com.fqrmix.authcenterback.models;
 
+import com.fqrmix.authcenterback.models.enums.ERole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -12,16 +13,16 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "services")
-public class Service {
+@Table(name = "roles")
+public class Role {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "service_id_seq")
-    @SequenceGenerator(name = "service_id_seq", sequenceName = "service_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_id_seq")
+    @SequenceGenerator(name = "role_id_seq", sequenceName = "role_id_seq", allocationSize = 1)
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "username", unique = true, nullable = false)
+    @Column(name = "name", nullable = false)
     @NotBlank
-    private EService name;
+    private ERole name;
 }

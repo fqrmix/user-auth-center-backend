@@ -22,7 +22,7 @@ import static java.util.Collections.list;
  */
 @Component
 @Slf4j
-public class LoggingFilterBean extends GenericFilterBean {
+public class LoggingFilter extends GenericFilterBean {
 
     @Override
     public void doFilter(

@@ -1,6 +1,5 @@
-package com.fqrmix.authcenterback.dto.response.data.impl;
+package com.fqrmix.authcenterback.dto.response.data;
 
-import com.fqrmix.authcenterback.dto.response.data.DataResponse;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -11,7 +10,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "Объект с данными о токене")
-public class TokenResponse implements DataResponse {
+public class TokenResponse {
     @Schema(description = "Токен доступа", example = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTYyMjUwNj...")
     private String token;
 

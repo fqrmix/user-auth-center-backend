@@ -1,8 +1,6 @@
-package com.fqrmix.authcenterback.dto.response.data.impl;
+package com.fqrmix.authcenterback.dto.response.data;
 
-import com.fqrmix.authcenterback.dto.response.data.DataResponse;
-import com.fqrmix.authcenterback.models.EService;
-import com.fqrmix.authcenterback.models.Service;
+import com.fqrmix.authcenterback.models.Role;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,10 +14,11 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Schema(description = "Ответ с данными пользователя")
-public class UserDataResponse implements DataResponse {
+public class UserDataResponse {
     @Schema(description = "Имя пользователя", example = "Johnny")
     private String username;
 
     @Schema(description = "Список ролей пользователя", example = "[ADMIN, USER]")
-    private Set<Service> services;
+    private Set<Role> roles;
+
 }
