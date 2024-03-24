@@ -2,8 +2,8 @@ version: '3'
 services:
   auth-center-back:
 #    image: "fqrmix/accounting-chat-manager-kotlin:latest"
-#    networks:
-#      - docker-private-network
+    networks:
+      - docker-private-network
     build: .
     env_file:
       - .env
@@ -15,6 +15,6 @@ services:
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
     command: ["java", "-jar", "/app/spring-boot-application.jar"]
 
-#networks:
-#  docker-private-network:
-#    external: true
+networks:
+  docker-private-network:
+    external: true

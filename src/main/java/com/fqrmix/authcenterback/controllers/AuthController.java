@@ -73,7 +73,7 @@ public class AuthController {
                     .secure(false)
                     .path("/")
                     .maxAge(new Date().getTime() - response.getExpirationDate().getTime() / 1000)
-                    .domain("localhost")
+                    .domain(".fqrmix.ru")
                     .sameSite("None")
                     .build();
 

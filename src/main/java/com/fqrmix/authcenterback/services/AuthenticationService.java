@@ -73,7 +73,7 @@ public class AuthenticationService {
         return TokenResponse.builder()
                 .withToken(jwtToken)
                 .withExpirationDate(jwtService.getExpirationDateFromJwtToken(jwtToken))
-                .withType("Bearer")
+                .withType("JWT")
                 .build();
     }
 
