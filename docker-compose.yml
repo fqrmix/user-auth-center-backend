@@ -1,7 +1,7 @@
 version: '3'
 services:
   auth-center-back:
-    image: "fqrmix/accounting-chat-manager-kotlin:latest"
+#    image: "fqrmix/accounting-chat-manager-kotlin:latest"
     networks:
       - docker-private-network
     build: .
