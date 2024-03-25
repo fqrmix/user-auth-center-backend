@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
      LOGIN: ${{ secrets.DOCKER_LOGIN }}
-     NAME: ${{ secrets.DOCKER_NAME }}
+     NAME: ${{ github.event.repository.name }}
 
     steps:
     - uses: actions/checkout@master
