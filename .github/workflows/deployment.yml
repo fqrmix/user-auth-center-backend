@@ -11,13 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     env:
      LOGIN: ${{ secrets.DOCKER_LOGIN }}
-     NAME: ${{ secrets.DOCKER_NAME }}
+     NAME: ${{ github.event.repository.name }}
 
     steps:
     - uses: actions/checkout@master
     
     - name: Login to docker.io
-      run: echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
+      run: echo ${{ secrets.DOCKER_ACESSS_TOKEN }} | docker login -u ${{ secrets.DOCKER_LOGIN }} --password-stdin
       
     - name: Build the Docker image
       run: docker build -t $LOGIN/$NAME:latest --file Dockerfile .

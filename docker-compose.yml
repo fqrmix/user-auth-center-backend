@@ -1,12 +1,9 @@
 version: '3'
 services:
   auth-center-back:
-#    image: "fqrmix/accounting-chat-manager-kotlin:latest"
+    image: "fqrmix/user-auth-center-backend:latest"
     networks:
       - docker-private-network
-    build: .
-    ports:
-      - "8080:8080"
     env_file:
       - .env
     environment:
