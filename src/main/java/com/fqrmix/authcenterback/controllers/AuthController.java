@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,6 +46,7 @@ public class AuthController {
     ) throws UserAlreadyExistsException {
         try {
             return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
                     .body(ApiSuccessResponseImpl.<UserDataResponse>builder()
                             .withType("success")
                             .withData(authenticationService.register(request))
@@ -78,6 +80,7 @@ public class AuthController {
                     .build();
 
             return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_JSON)
                     .header(HttpHeaders.SET_COOKIE, accessTokenCookie.toString())
                     .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.SET_COOKIE)
                     .body(ApiSuccessResponseImpl.<TokenResponse>builder()

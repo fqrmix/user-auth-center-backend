@@ -7,6 +7,7 @@ import com.fqrmix.authcenterback.dto.response.api.impl.ApiErrorResponseImpl;
 import com.fqrmix.authcenterback.models.enums.ErrorsConstants;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -36,19 +37,19 @@ public class GlobalRestExceptionHandler {
             WebRequest request
     ) {
 
-        return new ResponseEntity<>(
-                ApiErrorResponseImpl.builder()
-                        .withType("error")
-                        .withCode(ex.getClass().getSimpleName())
-                        .withMessage(ex.getLocalizedMessage())
-                        .withErrors(List.of(ErrorObject.builder()
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(
+                    ApiErrorResponseImpl.builder()
+                            .withType("error")
+                            .withCode(ex.getClass().getSimpleName())
+                            .withMessage(ex.getLocalizedMessage())
+                            .withErrors(List.of(ErrorObject.builder()
                                                 .withError(ErrorsConstants.BAD_CREDENTIALS.getError())
                                                 .withDescription(ErrorsConstants.BAD_CREDENTIALS.getDescription())
                                                 .build()))
-                        .build(),
-                new HttpHeaders(),
-                HttpStatus.UNAUTHORIZED
-        );
+                            .build()
+                );
     }
 
     /**
@@ -64,19 +65,19 @@ public class GlobalRestExceptionHandler {
             WebRequest request
     ) {
 
-        return new ResponseEntity<>(
-                ApiErrorResponseImpl.builder()
-                        .withType("error")
-                        .withCode(ex.getClass().getSimpleName())
-                        .withMessage(ex.getLocalizedMessage())
-                        .withErrors(List.of(ErrorObject.builder()
-                                .withError(ErrorsConstants.ACCESS_DENIED.getError())
-                                .withDescription(ErrorsConstants.ACCESS_DENIED.getDescription())
-                                .build()))
-                        .build(),
-                new HttpHeaders(),
-                HttpStatus.FORBIDDEN
-        );
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(
+                    ApiErrorResponseImpl.builder()
+                            .withType("error")
+                            .withCode(ex.getClass().getSimpleName())
+                            .withMessage(ex.getLocalizedMessage())
+                            .withErrors(List.of(ErrorObject.builder()
+                                    .withError(ErrorsConstants.ACCESS_DENIED.getError())
+                                    .withDescription(ErrorsConstants.ACCESS_DENIED.getDescription())
+                                    .build()))
+                            .build()
+                );
     }
 
     /**
@@ -92,19 +93,19 @@ public class GlobalRestExceptionHandler {
             WebRequest request
     ) {
 
-        return new ResponseEntity<ErrorResponse>(
-                ApiErrorResponseImpl.builder()
-                        .withType("error")
-                        .withCode(ex.getClass().getSimpleName())
-                        .withMessage(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                        .withErrors(List.of(ErrorObject.builder()
-                                .withError(ErrorsConstants.USER_ALREADY_EXISTS.getError())
-                                .withDescription(ErrorsConstants.USER_ALREADY_EXISTS.getDescription())
-                                .build()))
-                        .build(),
-                new HttpHeaders(),
-                HttpStatus.BAD_REQUEST
-        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(
+                    ApiErrorResponseImpl.builder()
+                            .withType("error")
+                            .withCode(ex.getClass().getSimpleName())
+                            .withMessage(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                            .withErrors(List.of(ErrorObject.builder()
+                                    .withError(ErrorsConstants.USER_ALREADY_EXISTS.getError())
+                                    .withDescription(ErrorsConstants.USER_ALREADY_EXISTS.getDescription())
+                                    .build()))
+                            .build()
+                );
     }
 
     /**
@@ -129,16 +130,16 @@ public class GlobalRestExceptionHandler {
                                 .build()
                 ).toList();
 
-        return new ResponseEntity<ErrorResponse>(
-                ApiErrorResponseImpl.builder()
-                        .withType("error")
-                        .withCode(ex.getClass().getSimpleName())
-                        .withMessage(HttpStatus.BAD_REQUEST.getReasonPhrase())
-                        .withErrors(validationErrors)
-                        .build(),
-                new HttpHeaders(),
-                HttpStatus.BAD_REQUEST
-        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(
+                    ApiErrorResponseImpl.builder()
+                            .withType("error")
+                            .withCode(ex.getClass().getSimpleName())
+                            .withMessage(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                            .withErrors(validationErrors)
+                            .build()
+                );
     }
 
     /**
@@ -151,18 +152,18 @@ public class GlobalRestExceptionHandler {
     @ExceptionHandler({ Exception.class })
     public ResponseEntity<ErrorResponse> handleAll(Exception ex, WebRequest request) {
 
-        return new ResponseEntity<ErrorResponse>(
-                ApiErrorResponseImpl.builder()
-                        .withType("error")
-                        .withMessage(ex.getLocalizedMessage())
-                        .withCode(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
-                        .withErrors(List.of(ErrorObject.builder()
-                                .withError(ErrorsConstants.INTERNAL_SERVER_ERROR.getError())
-                                .withDescription(ErrorsConstants.INTERNAL_SERVER_ERROR.getDescription())
-                                .build()))
-                        .build(),
-                new HttpHeaders(),
-                HttpStatus.INTERNAL_SERVER_ERROR
-        );
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(
+                    ApiErrorResponseImpl.builder()
+                            .withType("error")
+                            .withMessage(ex.getLocalizedMessage())
+                            .withCode(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+                            .withErrors(List.of(ErrorObject.builder()
+                                    .withError(ErrorsConstants.INTERNAL_SERVER_ERROR.getError())
+                                    .withDescription(ErrorsConstants.INTERNAL_SERVER_ERROR.getDescription())
+                                    .build()))
+                            .build()
+                );
     }
 }
