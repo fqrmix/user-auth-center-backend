@@ -4,8 +4,6 @@ services:
     image: "fqrmix/user-auth-center-backend:latest"
     networks:
       - docker-private-network
-    ports:
-      - "8080:8080"
     env_file:
       - .env
     environment:
