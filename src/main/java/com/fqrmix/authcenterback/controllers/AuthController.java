@@ -20,6 +20,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
+import java.time.Period;
 import java.util.Date;
 
 @RestController
@@ -74,7 +76,7 @@ public class AuthController {
                     .httpOnly(true)
                     .secure(true)
                     .path("/")
-                    .maxAge(new Date().getTime() - response.getExpirationDate().getTime() / 1000)
+                    .maxAge((response.getExpirationDate().getTime() - new Date().getTime()) / 1000)
                     .domain(".fqrmix.ru")
                     .sameSite("None")
                     .build();
