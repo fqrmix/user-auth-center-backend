@@ -7,6 +7,7 @@ import com.fqrmix.authcenterback.dto.response.data.TokenResponse;
 import com.fqrmix.authcenterback.dto.response.data.UserDataResponse;
 import com.fqrmix.authcenterback.exception.UserAlreadyExistsException;
 import com.fqrmix.authcenterback.services.AuthenticationService;
+import com.fqrmix.authcenterback.services.impl.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
@@ -71,6 +73,11 @@ public class AuthController {
     ) throws AuthenticationException {
         try {
             TokenResponse response = authenticationService.login(request);
+            UserDetailsImpl user = (UserDetailsImpl)
+                    SecurityContextHolder.getContext()
+                            .getAuthentication()
+                            .getPrincipal();
+
 
             ResponseCookie accessTokenCookie = ResponseCookie.from("_accessToken", response.getToken())
                     .httpOnly(true)
@@ -83,6 +90,7 @@ public class AuthController {
 
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_JSON)
+                    .header("X-Access-Authenticated-User", user.getUsername())
                     .header(HttpHeaders.SET_COOKIE, accessTokenCookie.toString())
                     .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, HttpHeaders.SET_COOKIE)
                     .body(ApiSuccessResponseImpl.<TokenResponse>builder()

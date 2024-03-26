@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -40,6 +41,7 @@ public class AuthorityController {
 
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_JSON)
+                    .header("X-Access-Authenticated-User", user.getUsername())
                     .body(
                             ApiSuccessResponseImpl.<UserDataResponse>builder()
                                     .withType("success")
