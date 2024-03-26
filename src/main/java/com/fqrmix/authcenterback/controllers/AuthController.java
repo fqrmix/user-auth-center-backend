@@ -72,7 +72,7 @@ public class AuthController {
 
             ResponseCookie accessTokenCookie = ResponseCookie.from("_accessToken", response.getToken())
                     .httpOnly(true)
-                    .secure(false)
+                    .secure(true)
                     .path("/")
                     .maxAge(new Date().getTime() - response.getExpirationDate().getTime() / 1000)
                     .domain(".fqrmix.ru")
