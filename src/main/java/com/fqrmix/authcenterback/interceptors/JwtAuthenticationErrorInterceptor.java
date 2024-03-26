@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 @Component
 @Slf4j
-public class AuthEntryPointInterceptor implements AuthenticationEntryPoint {
+public class JwtAuthenticationErrorInterceptor implements AuthenticationEntryPoint {
 
     /**
      * Handles unauthorized access errors by returning an appropriate response.

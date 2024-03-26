@@ -1,8 +1,8 @@
 package com.fqrmix.authcenterback.security;
 
 import com.fqrmix.authcenterback.services.MyUserDetailsService;
-import com.fqrmix.authcenterback.interceptors.AuthEntryPointInterceptor;
-import com.fqrmix.authcenterback.utils.AuthTokenFilter;
+import com.fqrmix.authcenterback.interceptors.JwtAuthenticationErrorInterceptor;
+import com.fqrmix.authcenterback.interceptors.JwtAuthenticationInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +30,7 @@ public class SecurityConfiguration {
     private MyUserDetailsService userDetailsService;
 
     @Autowired
-    private AuthEntryPointInterceptor unauthorizedHandler;
+    private JwtAuthenticationErrorInterceptor unauthorizedHandler;
 
     /**
      * Defines the authentication JWT token filter bean.
@@ -38,8 +38,8 @@ public class SecurityConfiguration {
      * @return The authentication JWT token filter bean.
      */
     @Bean
-    public AuthTokenFilter authenticationJwtTokenFilter() {
-        return new AuthTokenFilter();
+    public JwtAuthenticationInterceptor authenticationJwtTokenFilter() {
+        return new JwtAuthenticationInterceptor();
     }
 
     /**
