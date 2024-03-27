@@ -2,6 +2,7 @@ version: '3'
 services:
   auth-center-back:
     image: "fqrmix/user-auth-center-backend:latest"
+    container_name: user-auth-center-backend
     networks:
       - docker-private-network
     env_file:
