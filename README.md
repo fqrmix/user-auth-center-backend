@@ -35,7 +35,12 @@ This repository contains code for managing user authentication and authorization
 │   │   │               ├── exception
 │   │   │               │   └── UserAlreadyExistsException.java
 │   │   │               ├── interceptors
-│   │   │               │   └── AuthEntryPointInterceptor.java
+│   │   │               │   ├── helpers
+│   │   │               │   │   ├── SensitiveContentCachingRequestWrapper.java
+│   │   │               │   │   └── SensitiveContentCachingResponseWrapper.java
+│   │   │               │   ├── JwtAuthenticationErrorInterceptor.java
+│   │   │               │   ├── JwtAuthenticationInterceptor.java
+│   │   │               │   └── LoggingInterceptor.java
 │   │   │               ├── models
 │   │   │               │   ├── enums
 │   │   │               │   │   ├── ERole.java
@@ -57,13 +62,9 @@ This repository contains code for managing user authentication and authorization
 │   │   │               │   ├── ModulesService.java
 │   │   │               │   └── MyUserDetailsService.java
 │   │   │               ├── utils
-│   │   │               │   ├── AuthTokenFilter.java
-│   │   │               │   ├── GlobalRestExceptionHandler.java
-│   │   │               │   └── LoggingFilter.java
+│   │   │               │   └── GlobalRestExceptionHandler.java
 │   │   │               └── AuthCenterBackApplication.java
 │   │   └── resources
-│   │       ├── static
-│   │       ├── templates
 │   │       └── application.properties
 │   └── test
 │       └── java
@@ -77,8 +78,8 @@ This repository contains code for managing user authentication and authorization
 ├── docker-compose.yml
 ├── gradlew
 ├── gradlew.bat
-├── qodana.yaml
 └── settings.gradle
+
 ```
 
 ## JWTService
