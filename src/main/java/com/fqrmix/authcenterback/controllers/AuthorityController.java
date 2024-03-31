@@ -1,7 +1,6 @@
 package com.fqrmix.authcenterback.controllers;
 
 import com.fqrmix.authcenterback.dto.request.AuthorityRequestDTO;
-import com.fqrmix.authcenterback.dto.response.api.impl.ApiErrorResponseImpl;
 import com.fqrmix.authcenterback.dto.response.api.impl.ApiSuccessResponseImpl;
 import com.fqrmix.authcenterback.dto.response.data.UserDataResponse;
 import com.fqrmix.authcenterback.services.impl.UserDetailsImpl;
@@ -9,13 +8,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
-import org.springframework.web.HttpMediaTypeException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +35,6 @@ public class AuthorityController {
             throw new AccessDeniedException("Access Denied");
         } else {
             var user = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_JSON)
                     .header("X-Access-Authenticated-User", user.getUsername())
@@ -46,10 +42,11 @@ public class AuthorityController {
                             ApiSuccessResponseImpl.<UserDataResponse>builder()
                                     .withType("success")
                                     .withMessage("Access Granted")
-                                    .withData(UserDataResponse.builder()
-                                            .withUsername(user.getUsername())
-                                            .withRoles(user.getRoles())
-                                            .build())
+                                    .withData(
+                                            UserDataResponse.builder()
+                                                .withUsername(user.getUsername())
+                                                .withRoles(user.getRoles())
+                                                .build())
                                     .build()
                     );
         }
