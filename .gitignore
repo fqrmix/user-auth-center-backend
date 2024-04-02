@@ -39,3 +39,4 @@ out/
 ### Keys ###
 *.key*
 *.env
+docker-compose-dev.yml
