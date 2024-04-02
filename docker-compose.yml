@@ -13,7 +13,7 @@ services:
       POSTGRES_URL: "${POSTGRES_URL}"
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-    command: ["java", "-XX:+UseSerialGC", "-jar", "/app/spring-boot-application.jar"]
+    command: ["java", "-XX:+UseSerialGC", "-Xss512k", "-XX:MaxRAM=64m", "-jar", "/app/spring-boot-application.jar"]
 
 networks:
   docker-private-network:
