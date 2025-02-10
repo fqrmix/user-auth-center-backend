@@ -1,5 +1,6 @@
 package com.fqrmix.authcenterback.services;
 
+import com.fqrmix.authcenterback.models.Role;
 import com.fqrmix.authcenterback.services.impl.UserDetailsImpl;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.*;
@@ -16,6 +17,7 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Date;
+import java.util.Set;
 
 /**
  * Service class responsible for JWT token generation, validation, and extraction of user information.
@@ -51,6 +53,7 @@ public class JWTService {
         return Jwts.builder()
                 .subject(userPrincipal.getUsername())
                 .issuedAt(new Date())
+                .claim("roles", userPrincipal.getRoles())
                 .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(getPrivateKey())
                 .compact();
