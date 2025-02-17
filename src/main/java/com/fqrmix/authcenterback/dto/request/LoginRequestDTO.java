@@ -12,13 +12,14 @@ import lombok.Data;
 @Schema(description = "Запрос на авторизацию пользователя")
 public class LoginRequestDTO {
 
-    @Schema(description = "Имя пользователя", example = "Jon")
-    @Size(min = 5, max = 20, message = "Имя пользователя должно содержать от 5 до 50 символов")
-    @NotBlank(message = "Имя пользователя не может быть пустыми")
+    @Schema(description = "Имя пользователя", example = "Johnny")
+    @Size(min = 5, max = 20, message = "Имя пользователя должно содержать от 5 до 20 символов")
+    @NotBlank
     private String username;
 
     @Schema(description = "Пароль пользователя", example = "myPasswordQWERTY123")
     @Size(min = 6, max = 120, message = "Длина пароля должна быть не более 120 символов")
+    @NotBlank
     private String password;
 
 }

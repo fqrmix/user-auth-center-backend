@@ -18,7 +18,7 @@ public class UserDataResponse {
     @Schema(description = "Имя пользователя", example = "Johnny")
     private String username;
 
-    @Schema(description = "Список ролей пользователя", example = "[ADMIN, USER]")
+    @Schema(description = "Список ролей пользователя", example = "[ROLE_ADMIN, ROLE_USER]")
     private Set<Role> roles;
 
 }

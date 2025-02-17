@@ -6,6 +6,7 @@ import com.fqrmix.authcenterback.dto.response.data.UserDataResponse;
 import com.fqrmix.authcenterback.services.impl.UserDetailsImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -28,6 +29,7 @@ public class AuthorityController {
     @Operation(summary = "Доступен только авторизованным пользователям с ролью, указанной  в запросе")
     public ResponseEntity<ApiSuccessResponseImpl<UserDataResponse>> authorize(
             @RequestBody
+            @Valid
             AuthorityRequestDTO authorityRequestDTO,
             SecurityContextHolderAwareRequestWrapper request
     ) {
