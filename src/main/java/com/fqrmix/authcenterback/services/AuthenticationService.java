@@ -8,6 +8,7 @@ import com.fqrmix.authcenterback.models.enums.ERole;
 import com.fqrmix.authcenterback.models.User;
 import com.fqrmix.authcenterback.models.Role;
 import com.fqrmix.authcenterback.repositories.RoleRepository;
+import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,35 +95,19 @@ public class AuthenticationService {
                 .withPassword(passwordEncoder.encode(requestDTO.getPassword()))
                 .build();
 
-        Set<String> strRoles = requestDTO.getRoles();
+        Set<ERole> eRoles = requestDTO.getRoles();
         Set<Role> roles = new HashSet<>();
 
-        if (strRoles == null) {
-            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-            roles.add(userRole);
-        } else {
-            strRoles.forEach(role -> {
-                switch (role) {
-                    case "ROLE_ADMIN":
-                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(adminRole);
-                        break;
-
-//                    case "MODERATOR":
-//                        Role modRole = roleRepository.findByName(ERole.MODERATOR)
-//                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-//                        roles.add(ERole.MODERATOR);
-//                        break;
-
-                    default:
-                        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-                        roles.add(userRole);
-                }
-            });
+        if (eRoles == null) {
+            throw new ValidationException("Roles set is empty in request DTO");
         }
+
+        eRoles.forEach(role -> {
+            Role adminRole = roleRepository.findByName(role)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+            roles.add(adminRole);
+        });
+
         user.setRoles(roles);
         userDetailsService.create(user);
 

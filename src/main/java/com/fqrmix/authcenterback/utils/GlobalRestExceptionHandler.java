@@ -5,6 +5,7 @@ import com.fqrmix.authcenterback.models.ErrorObject;
 import com.fqrmix.authcenterback.dto.response.api.ErrorResponse;
 import com.fqrmix.authcenterback.dto.response.api.impl.ApiErrorResponseImpl;
 import com.fqrmix.authcenterback.models.enums.ErrorsConstants;
+import jakarta.validation.ValidationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -139,6 +140,31 @@ public class GlobalRestExceptionHandler {
                             .withMessage(HttpStatus.BAD_REQUEST.getReasonPhrase())
                             .withErrors(validationErrors)
                             .build()
+                );
+    }
+
+    /**
+     * Handles validation errors for Jakarta annotations.
+     *
+     * @param ex      The ValidationException that occurred.
+     * @return ResponseEntity containing the error response.
+     */
+    @ExceptionHandler({ ValidationException.class })
+    public ResponseEntity<ErrorResponse> handleJakartaValidationError(
+            ValidationException ex
+    ) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(
+                        ApiErrorResponseImpl.builder()
+                                .withType("error")
+                                .withCode(ex.getClass().getSimpleName())
+                                .withMessage(HttpStatus.BAD_REQUEST.getReasonPhrase())
+                                .withErrors(List.of(ErrorObject.builder()
+                                                .withDescription("Request is not valid")
+                                                .withError(ex.getLocalizedMessage())
+                                        .build()))
+                                .build()
                 );
     }
 
