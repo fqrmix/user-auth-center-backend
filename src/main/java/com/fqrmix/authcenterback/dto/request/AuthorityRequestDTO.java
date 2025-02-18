@@ -3,6 +3,7 @@ package com.fqrmix.authcenterback.dto.request;
 import com.fqrmix.authcenterback.models.enums.ERole;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 /**
@@ -13,7 +14,7 @@ import lombok.Data;
 public class AuthorityRequestDTO {
 
     @Schema(description = "Запрашиваемая роль", example = "ROLE_ADMIN")
-    @NotBlank
+    @NotNull
     private ERole requestedRole;
 
 }
